@@ -1,0 +1,25 @@
+﻿@model Progress.Sitefinity.RestSdk.Dto.ImageDto
+
+@{
+    var thumbnails = Model.Thumbnails;
+    if (thumbnails != null && thumbnails.Count >= 0)
+    {
+        <picture>
+            @foreach (var thumbnail in thumbnails.OrderBy(t => t.Width))
+            {
+                string sourceWidthAttr = Model.Width != 0 && thumbnail.Width != Model.Width ? string.Format(@"width={0}", thumbnail.Width) : string.Empty;
+                string sourceHeightAttr = Model.Height != 0 && thumbnail.Height != Model.Height ? string.Format(@"height={0}", thumbnail.Height) : string.Empty;
+                if (!string.IsNullOrWhiteSpace(sourceWidthAttr) && !string.IsNullOrWhiteSpace(sourceHeightAttr))
+                {
+                    <source media="(max-width: @(thumbnail.Width)px)" srcset="@thumbnail.Url" type="@thumbnail.MimeType" @sourceWidthAttr @sourceHeightAttr>
+                }
+            }
+            <img loading="lazy" class="img-fluid" src="@Model.Url" title="@Model.Title" alt="@Model.AlternativeText">
+        </picture>
+    }
+    else
+    {
+        <img loading="lazy" class="img-fluid" src="@Model.Url" title="@Model.Title" alt="@Model.AlternativeText">
+    }
+
+}
